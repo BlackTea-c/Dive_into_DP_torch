@@ -1,9 +1,6 @@
-import random
-import numpy as np
+import torch
+from torch import nn
 
-
-k=int(input('输入k'))
-
-assert k>1
-
-print('True')
+x=torch.tensor([[1,2],[2,3]])
+y=torch.tensor([[2,2],[2,3]])
+print(x[:,:1])

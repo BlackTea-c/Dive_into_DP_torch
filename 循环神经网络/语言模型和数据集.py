@@ -89,11 +89,26 @@ class SeqDataLoader:  #@save
     """加载序列数据的迭代器"""
     def __init__(self, batch_size, num_steps, use_random_iter, max_tokens):
         if use_random_iter:
-            self.data_iter_fn = d2l.seq_data_iter_random
+            self.data_iter_fn = seq_data_iter_random
         else:
-            self.data_iter_fn = d2l.seq_data_iter_sequential
+            self.data_iter_fn = seq_data_iter_sequential
         self.corpus, self.vocab = d2l.load_corpus_time_machine(max_tokens)
         self.batch_size, self.num_steps = batch_size, num_steps
 
     def __iter__(self):
         return self.data_iter_fn(self.corpus, self.batch_size, self.num_steps)
+
+
+def load_data_time_machine(batch_size, num_steps,  #@save
+                           use_random_iter=False, max_tokens=10000):
+    """返回时光机器数据集的迭代器和词表"""
+    data_iter = SeqDataLoader(
+        batch_size, num_steps, use_random_iter, max_tokens)
+    return data_iter, data_iter.vocab
+
+
+def try_gpu(i=0):  #@save
+    """如果存在，则返回gpu(i)，否则返回cpu()"""
+    if torch.cuda.device_count() >= i + 1:
+        return torch.device(f'cuda:{i}')
+    return torch.device('cpu')
